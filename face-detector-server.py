@@ -15,7 +15,7 @@ def detectar_caras():
         ubicaciones = face_recognition.face_locations(frame)
         codificaciones = face_recognition.face_encodings(frame, ubicaciones)
         
-        for codificacion in codificaciones:
+        for (top, right, bottom, left), codificacion in zip(ubicaciones, codificaciones):
             coincidencias = face_recognition.compare_faces([codificacion_conocida], codificacion)
             if True in coincidencias:
                 mensaje = "Soy yo mero andres"
@@ -24,9 +24,8 @@ def detectar_caras():
                 mensaje = "Desconocido"
                 color = (0, 0, 255)
 
-            for (top, right, bottom, left) in ubicaciones:
-                cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
-                cv2.putText(frame, mensaje, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+            cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
+            cv2.putText(frame, mensaje, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
         ret, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
